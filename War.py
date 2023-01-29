@@ -13,7 +13,7 @@ class Army():
 class Battle():
     def __init__(self, *args):
         self.result=self.fight(*args)
-    def fight(self, first, second):
+    def fight(self, first, second, first_extra=None, second_extra=None):
         while first.is_alive and second.is_alive:
             second.get_damage(first.attack)
             if isinstance(first, Vampire): #and not isinstance(second, Vampire)):
@@ -22,12 +22,16 @@ class Battle():
                     extra_health -= (second.shields * first.vampirism)/100
                 if first.health > first.max_health:
                     first.health = first.max_health
+            elif isinstance(first, Lancer) and second_extra is not None:
+                second_extra.get_damage(first.attack // 2)
             if isinstance(second, Vampire): #and not isinstance(first, Vampire):
                 extra_health = second.attack/(second.vampirism//100)
                 if isinstance(first, Defender):
                     extra_health -= (first.shields * second.vampirism)/100
                 if second.health > second.max_health:
                     second.health = second.max_health
+            elif isinstance(second, Lancer) and first_extra is not None:
+                first_extra.get_damage(second.attack // 2)
             if second.is_alive:
                 first.get_damage(second.attack)
         return first.is_alive and not second.is_alive
@@ -86,7 +90,10 @@ class Vampire(Warrior):
         self.attack = 4
         self.vampirism=50
 
-
+class Lancer(Warrior):
+    def __init__(self):
+        super().__init__()
+        self.attack = 6
 
 if __name__=="__main__":
     chuck=Knight()
