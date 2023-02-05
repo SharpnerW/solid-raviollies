@@ -1,7 +1,3 @@
-#making easier
-true=True
-false=False
-#
 class Army():
     units: list
     def __init__(self):
@@ -11,20 +7,33 @@ class Army():
             self.units.append(i)
 
 class Battle():
-    def __init__(self, *args):
-        self.result=self.fight(*args)
-    def fight(self, first, second, first_extra=None, second_extra=None):
-        while first.is_alive and second.is_alive:
-            second.get_damage(first.attack)
-            if isinstance(first, Vampire): #and not isinstance(second, Vampire)):
-                extra_health = first.attack/(first.vampirism//100)
-                if isinstance(second, Defender):
-                    extra_health -= (second.shields * first.vampirism)/100
-                if first.health > first.max_health:
-                    first.health = first.max_health
+
+    def war(self, first_army, second_army):
+        first_army_pointer=0
+        second_army_pointer=0
+
+        while first_army_pointer!=len(first_army.units) and second_army_pointer!=len(second_army.units):
+            if fight(first_army.units[first_army_pointer],
+                  second_army.units[second_army_pointer]):
+                second_army_pointer+=1
+            else:
+                first_army_pointer+=1
+        if second_army_pointer == len(first_army.units):
+            return True
+        else:
+            return False
+def fight(first, second, first_extra=None, second_extra=None):
+    while first.is_alive and second.is_alive:
+        second.get_damage(first.attack)
+        if isinstance(first, Vampire):
+            extra_health = first.attack/(first.vampirism//100)
+            if isinstance(second, Defender):
+                extra_health -= (second.shields * first.vampirism)/100
+            if first.health > first.max_health:
+                first.health = first.max_health
             elif isinstance(first, Lancer) and second_extra is not None:
                 second_extra.get_damage(first.attack // 2)
-            if isinstance(second, Vampire): #and not isinstance(first, Vampire):
+            if isinstance(second, Vampire):
                 extra_health = second.attack/(second.vampirism//100)
                 if isinstance(first, Defender):
                     extra_health -= (first.shields * second.vampirism)/100
@@ -35,21 +44,6 @@ class Battle():
             if second.is_alive:
                 first.get_damage(second.attack)
         return first.is_alive and not second.is_alive
-    def war(self, first_army, second_army):
-        first_army_pointer=0
-        second_army_pointer=0
-
-        while first_army_pointer!=len(first_army.units) and second_army_pointer!=len(second_army.units):
-            if self.fight(first_army.units[first_army_pointer],
-                  second_army_pointer.units[second_army_pointer]):
-                second_army_pointer+=1
-            else:
-                first_army_pointer+=1
-        if second_army_pointer == len(first_army.units):
-            return true
-        else:
-            return false
-
 
 class Warrior:
     health: int
@@ -59,12 +53,12 @@ class Warrior:
     def __init__(self):
         self.health=50
         self.attack=5
-        self.is_alive=true
+        self.is_alive=True
         self.shields=0
     def get_damage(self, damage):
         self.health -= damage
         if self.health < 1:
-            self.is_alive=false
+            self.is_alive=False
 class Knight(Warrior):
     def __init__(self):
         super().__init__()
@@ -79,7 +73,7 @@ class Defender(Warrior):
     def get_damage(self, damage):
         self.health -= (damage > self.shields)*(damage - self.shields)
         if self.health < 1:
-            self.is_alive=false
+            self.is_alive=False
 
 class Vampire(Warrior):
     vampirism: int
@@ -96,6 +90,9 @@ class Lancer(Warrior):
         self.attack = 6
 
 if __name__=="__main__":
-    chuck=Knight()
-    carl=Defender()
-    print(Battle(chuck, carl).result)
+    army3 = Army()
+    army3.add_units(Warrior(), Lancer(), Defender())
+    army4 = Army()
+    army4.add_units(Vampire(), Warrior(), Lancer())
+    battle=Battle()
+    print(battle.war(army3, army4))
