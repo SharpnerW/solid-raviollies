@@ -6663,10 +6663,6 @@ print(count_jumps(7, [0,5,9,2,4,1,6,5]))
 
 
 
-
-
-
-
 #TODO
 #TODO
 #TODO
