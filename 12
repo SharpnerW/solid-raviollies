@@ -1,0 +1,51 @@
+import turtle as tr
+class LSYS:
+    axi: str
+    ste: str
+    wid: int
+    lgh: int
+    ang: int
+    tur: tr.Turtle
+    rul: dict
+    def __init__(self, axi:str, wid:int, lgh:int,ang:int, stps:tuple,stang:int):
+        self.tur = tr.Turtle()
+        self.tur.hideturtle()
+        tr.tracer(0, 0)
+        self.tur.up()
+        self.tur.goto(stps)
+        self.tur.setheading(stang)
+        self.tur.down()
+        self.tur.pensize(wid)
+        self.axi=axi
+        self.ste=axi
+        self.lgh=lgh
+        self.ang=ang
+        self.rul=dict()
+    def adrul(self, *rules: tr):
+        for key, val in rules:
+            self.rul[key]=val
+    def gp(self, itr):
+        for _ in range(itr):
+            for key, val in self.rul.items():
+                self.ste=self.ste.replace(key,val.lower())
+            self.ste = self.ste.upper()
+    def drw(self):
+        for mv in self.ste:
+            if mv=='F':
+                self.tur.fd(self.lgh)
+            elif mv=='+':
+                self.tur.lt(self.ang)
+            elif mv=='-':
+                self.tur.rt(self.ang)
+        tr.done()
+    @staticmethod
+    def pre(wid:int,ht:int):
+        scr=tr.Screen()
+        scr.setup(wid, ht)
+if __name__=="__main__":
+    LSYS.pre(1200,600)
+    koch=LSYS(axi="F-F-F-F+F+F+F-F-F-F", wid=2, lgh=5, ang=45, stps=(0,0), stang=0)
+    koch.adrul(("F","F+F-F"))
+    koch.gp(10)
+    print(koch.ste)
+    koch.drw()
