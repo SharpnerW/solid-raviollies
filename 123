@@ -1,0 +1,28 @@
+import turtle
+
+
+def dks(t, lh):
+    if lh < 6:
+        t.fd(lh)
+        t.lt(60)
+        t.fd(lh)
+        t.rt(120)
+        t.fd(lh)
+        t.lt(60)
+        t.fd(lh)
+    else:
+        nlh=lh//3
+        dks(t,nlh)
+        t.left(60)
+        dks(t,nlh)
+        t.rt(120)
+        dks(t, nlh)
+        t.left(60)
+        dks(t, nlh)
+
+
+zlata = turtle.Turtle()
+zlata.speed(-1)
+
+
+turtle.done()
